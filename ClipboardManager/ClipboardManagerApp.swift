@@ -107,56 +107,59 @@ struct ClipboardManagerApp: App {
         let decoder = JSONDecoder()
         var dataUserObject: User? = nil
         do {
-            let dataDecoded = try decoder.decode([User].self, from: data ?? Data(json.utf8))
+            let dataDecoded = try decoder.decode(User.self, from: data ?? Data(json.utf8))
             DispatchQueue.main.async {
-                ten = dataDecoded[0].ten
-                nine = dataDecoded[0].nine
-                eight = dataDecoded[0].eight
-                seven = dataDecoded[0].seven
-                six = dataDecoded[0].six
-                five = dataDecoded[0].five
-                four = dataDecoded[0].four
-                three = dataDecoded[0].three
-                two = dataDecoded[0].two
-                one1 = dataDecoded[0].one1
+                ten = dataDecoded.ten
+                nine = dataDecoded.nine
+                eight = dataDecoded.eight
+                seven = dataDecoded.seven
+                six = dataDecoded.six
+                five = dataDecoded.five
+                four = dataDecoded.four
+                three = dataDecoded.three
+                two = dataDecoded.two
+                one1 = dataDecoded.one1
             }
-            dataUserObject = dataDecoded[0]
+            dataUserObject = dataDecoded
         } catch {
             print("Failed to decode JSON, did not rewrite vars")
         }
         
         // Update List
         if let read = pasteboard.pasteboardItems?.first?.string(forType: .string) {
-            DispatchQueue.main.async {
-                ten = nine
-                nine = eight
-                eight = seven
-                seven = six
-                six = five
-                five = four
-                four = three
-                three = two
-                two = one1
-                one1 = read
+            if read != one1 {
+                DispatchQueue.main.async {
+                    ten = nine
+                    nine = eight
+                    eight = seven
+                    seven = six
+                    six = five
+                    five = four
+                    four = three
+                    three = two
+                    two = one1
+                    one1 = read
+                }
             }
         }
         
         // Encode New JSON Values
-        encodeJSON(userData: dataUserObject!)
+        encodeJSON(userData: dataUserObject)
     }
     
     // JSON Utils
     // Takes in User object and makes JSON file
-    func encodeJSON(userData: User) {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        
-        do {
-            var fileURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("history.json")
-            let data = try encoder.encode(userData)
-            try data.write(to: fileURL)
-        } catch {
-            print("Error in encoding JSON")
+    func encodeJSON(userData: User?) {
+        if userData != nil {
+            let encoder = JSONEncoder()
+            
+            do {
+                let fileURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("history.json")
+                let data = try encoder.encode(userData)
+                try data.write(to: fileURL, options: .atomic)
+            } catch {
+                print("Error in encoding JSON")
+            }
         }
         
     }
@@ -165,6 +168,7 @@ struct ClipboardManagerApp: App {
         do {
             let fileURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("history.json")
             let data = try Data(contentsOf: fileURL, options: .alwaysMapped)
+            print(fileURL)
             return data
         } catch {
             print("Unable to parse JSON file")
