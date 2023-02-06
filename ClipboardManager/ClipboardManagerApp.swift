@@ -83,9 +83,9 @@ struct ClipboardManagerApp: App {
     func updateVars() {
         
         // Read from clipboard/pasteboard
-        var pasteboard = NSPasteboard.general
+        let pasteboard = NSPasteboard.general
         
-        var json = """
+        let json = """
         [
             {
                 "one1": "Paul",
@@ -103,10 +103,11 @@ struct ClipboardManagerApp: App {
         """
 
         // JSON Read, Decode, Rewrite Vars
-        var data = Data(json.utf8)
-        var decoder = JSONDecoder()
+        let data = decodeJSON()
+        let decoder = JSONDecoder()
+        var dataUserObject: User? = nil
         do {
-            var dataDecoded = try decoder.decode([User].self, from: data)
+            let dataDecoded = try decoder.decode([User].self, from: data ?? Data(json.utf8))
             DispatchQueue.main.async {
                 ten = dataDecoded[0].ten
                 nine = dataDecoded[0].nine
@@ -119,12 +120,13 @@ struct ClipboardManagerApp: App {
                 two = dataDecoded[0].two
                 one1 = dataDecoded[0].one1
             }
+            dataUserObject = dataDecoded[0]
         } catch {
             print("Failed to decode JSON, did not rewrite vars")
         }
         
         // Update List
-        if var read = pasteboard.pasteboardItems?.first?.string(forType: .string) {
+        if let read = pasteboard.pasteboardItems?.first?.string(forType: .string) {
             DispatchQueue.main.async {
                 ten = nine
                 nine = eight
@@ -138,6 +140,9 @@ struct ClipboardManagerApp: App {
                 one1 = read
             }
         }
+        
+        // Encode New JSON Values
+        encodeJSON(userData: dataUserObject!)
     }
     
     // JSON Utils
@@ -147,26 +152,24 @@ struct ClipboardManagerApp: App {
         encoder.outputFormatting = .prettyPrinted
         
         do {
-            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-            var data = try encoder.encode(userData)
-            try data.write(to: URL(fileURLWithPath: Bundle.main.path(forResource: "history", ofType: "json")))
+            var fileURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("history.json")
+            let data = try encoder.encode(userData)
+            try data.write(to: fileURL)
         } catch {
             print("Error in encoding JSON")
         }
         
     }
     // Returns Data object of JSON file
-    func decodeJSON() -> Data {
-        if let path = Bundle.main.path(forResource: "history", ofType: "json") {
-            do {
-                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped)
-                return data
-            } catch {
-                print("Unable to parse JSON file")
-            }
-        } else {
-            print("Invalid filename/path")
+    func decodeJSON() -> Data? {
+        do {
+            let fileURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("history.json")
+            let data = try Data(contentsOf: fileURL, options: .alwaysMapped)
+            return data
+        } catch {
+            print("Unable to parse JSON file")
         }
+        return nil
     }
     
 }
