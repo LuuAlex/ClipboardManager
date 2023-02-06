@@ -34,6 +34,20 @@ struct ClipboardManagerApp: App {
         two = ""
         one1 = ""
     }
+    
+    // struct For JSON
+    struct User: Codable {
+        var one1: String
+        var two: String
+        var three: String
+        var four: String
+        var five: String
+        var six: String
+        var seven: String
+        var eight: String
+        var nine: String
+        var ten: String
+    }
 
     
     // Main Body
@@ -67,19 +81,6 @@ struct ClipboardManagerApp: App {
     }
     
     func updateVars() {
-        // struct For JSON
-        struct User: Codable {
-            var one1: String
-            var two: String
-            var three: String
-            var four: String
-            var five: String
-            var six: String
-            var seven: String
-            var eight: String
-            var nine: String
-            var ten: String
-        }
         
         // Read from clipboard/pasteboard
         var pasteboard = NSPasteboard.general
@@ -136,6 +137,35 @@ struct ClipboardManagerApp: App {
                 two = one1
                 one1 = read
             }
+        }
+    }
+    
+    // JSON Utils
+    // Takes in User object and makes JSON file
+    func encodeJSON(userData: User) {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        
+        do {
+            let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+            var data = try encoder.encode(userData)
+            try data.write(to: URL(fileURLWithPath: Bundle.main.path(forResource: "history", ofType: "json")))
+        } catch {
+            print("Error in encoding JSON")
+        }
+        
+    }
+    // Returns Data object of JSON file
+    func decodeJSON() -> Data {
+        if let path = Bundle.main.path(forResource: "history", ofType: "json") {
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .alwaysMapped)
+                return data
+            } catch {
+                print("Unable to parse JSON file")
+            }
+        } else {
+            print("Invalid filename/path")
         }
     }
     
