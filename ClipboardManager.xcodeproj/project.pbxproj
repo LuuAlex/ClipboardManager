@@ -45,6 +45,7 @@
 		67F152392990A6BA00EB8414 /* ClipboardManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClipboardManagerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67F1523D2990A6BA00EB8414 /* ClipboardManagerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManagerUITests.swift; sourceTree = "<group>"; };
 		67F1523F2990A6BA00EB8414 /* ClipboardManagerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManagerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		67F1524C2991B6A100EB8414 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +96,7 @@
 		67F152202990A6B900EB8414 /* ClipboardManager */ = {
 			isa = PBXGroup;
 			children = (
+				67F1524C2991B6A100EB8414 /* Info.plist */,
 				67F152212990A6B900EB8414 /* ClipboardManagerApp.swift */,
 				67F152232990A6B900EB8414 /* ContentView.swift */,
 				67F152252990A6BA00EB8414 /* Assets.xcassets */,
@@ -422,6 +424,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ClipboardManager/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClipboardManager/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -448,6 +451,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"ClipboardManager/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ClipboardManager/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (

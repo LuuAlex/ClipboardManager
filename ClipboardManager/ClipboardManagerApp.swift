@@ -22,6 +22,8 @@ struct ClipboardManagerApp: App {
     @State var two: String
     @State var one1: String
     
+    @State var currentNumber: String = "1"
+    
     init() {
         ten = ""
         nine = ""
@@ -59,25 +61,57 @@ struct ClipboardManagerApp: App {
         */
         var _ = print(updateVars())
         
-        var currentNumber: String = "1"
-        MenuBarExtra(currentNumber, systemImage: "\(currentNumber).circle") {
-            Button(one1) {
-                currentNumber = "1"
+        MenuBarExtra(currentNumber, systemImage: "arrow.up.doc.on.clipboard") {
+            Group {
+                Button(one1) {
+                    writeToClipboard(data: one1)
+                }
+                .keyboardShortcut("1")
+                Button(two) {
+                    writeToClipboard(data: two)
+                }
+                .keyboardShortcut("2")
+                Button(three) {
+                    writeToClipboard(data: three)
+                }
+                .keyboardShortcut("3")
+                Button(four) {
+                    writeToClipboard(data: four)
+                }
+                .keyboardShortcut("4")
+                Button(five) {
+                    writeToClipboard(data: five)
+                }
+                .keyboardShortcut("5")
+                Button(six) {
+                    writeToClipboard(data: six)
+                }
+                .keyboardShortcut("6")
+                Button(seven) {
+                    writeToClipboard(data: seven)
+                }
+                .keyboardShortcut("7")
+                Button(eight) {
+                    writeToClipboard(data: eight)
+                }
+                .keyboardShortcut("8")
+                
             }
-            .keyboardShortcut("1")
-            Button(two) {
-                currentNumber = "2"
-            }
-            .keyboardShortcut("2")
-            Button(three) {
-                currentNumber = "3"
-            }
-            .keyboardShortcut("3")
+            
             Divider()
-                Button("Quit") {
-                    NSApplication.shared.terminate(nil)
-                }.keyboardShortcut("Q")
+            Button("Update Clipboard History") {
+                currentNumber = String(Int.random(in: 1..<1000));
+            }.keyboardShortcut("U")
+            Button("Clear Clipboard History") {
+                clearClipboardHistory()
+            }.keyboardShortcut("C")
+            Button("Quit") {
+                NSApplication.shared.terminate(nil)
+            }.keyboardShortcut("Q")
         }
+        
+        
+        
     }
     
     func updateVars() {
@@ -170,6 +204,29 @@ struct ClipboardManagerApp: App {
             print("Unable to parse JSON file")
         }
         return nil
+    }
+    
+    // Write New String to Clipboard
+    func writeToClipboard(data: String) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.declareTypes([NSPasteboard.PasteboardType.string], owner: nil)
+        pasteboard.setString(data, forType: NSPasteboard.PasteboardType.string)
+    }
+    
+    // Wipes Clipboard History
+    func clearClipboardHistory() {
+        ten = ""
+        nine = ""
+        eight = ""
+        seven = ""
+        six = ""
+        five = ""
+        four = ""
+        three = ""
+        two = ""
+        one1 = ""
+        writeToClipboard(data: "")
+        encodeJSON(userData: User(one1: one1, two: two, three: three, four: four, five: five, six: six, seven: seven, eight: eight, nine: nine, ten: ten))
     }
     
 }
