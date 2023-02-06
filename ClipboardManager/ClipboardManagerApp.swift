@@ -84,28 +84,26 @@ struct ClipboardManagerApp: App {
         
         // Read from clipboard/pasteboard
         let pasteboard = NSPasteboard.general
-        
+                
+        // Default JSON
         let json = """
-        [
-            {
-                "one1": "Paul",
-                "two": "2",
-                "three": "3",
-                "four": "4",
-                "five": "5",
-                "six": "6",
-                "seven": "7",
-                "eight": "8",
-                "nine": "9",
-                "ten": "10"
-            }
-        ]
-        """
-
+                {
+                    "one1": "1",
+                    "two": "2",
+                    "three": "3",
+                    "four": "4",
+                    "five": "5",
+                    "six": "6",
+                    "seven": "7",
+                    "eight": "8",
+                    "nine": "9",
+                    "ten": "10"
+                }
+            """
+        
         // JSON Read, Decode, Rewrite Vars
         let data = decodeJSON()
         let decoder = JSONDecoder()
-        var dataUserObject: User? = nil
         do {
             let dataDecoded = try decoder.decode(User.self, from: data ?? Data(json.utf8))
             DispatchQueue.main.async {
@@ -120,7 +118,6 @@ struct ClipboardManagerApp: App {
                 two = dataDecoded.two
                 one1 = dataDecoded.one1
             }
-            dataUserObject = dataDecoded
         } catch {
             print("Failed to decode JSON, did not rewrite vars")
         }
@@ -139,13 +136,13 @@ struct ClipboardManagerApp: App {
                     three = two
                     two = one1
                     one1 = read
+                    // Encode New JSON Values
+                    encodeJSON(userData: User(one1: one1, two: two, three: three, four: four, five: five, six: six, seven: seven, eight: eight, nine: nine, ten: ten))
                 }
             }
         }
         
-        // Encode New JSON Values
-        encodeJSON(userData: dataUserObject)
-    }
+    } // End updateVars() func
     
     // JSON Utils
     // Takes in User object and makes JSON file
@@ -168,7 +165,6 @@ struct ClipboardManagerApp: App {
         do {
             let fileURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("history.json")
             let data = try Data(contentsOf: fileURL, options: .alwaysMapped)
-            print(fileURL)
             return data
         } catch {
             print("Unable to parse JSON file")
