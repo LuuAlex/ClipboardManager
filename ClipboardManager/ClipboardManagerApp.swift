@@ -11,8 +11,6 @@ import SwiftUI
 struct ClipboardManagerApp: App {
     
     // Variables
-    @State var ten: String
-    @State var nine: String
     @State var eight: String
     @State var seven: String
     @State var six: String
@@ -25,8 +23,6 @@ struct ClipboardManagerApp: App {
     @State var currentNumber: String = "1"
     
     init() {
-        ten = ""
-        nine = ""
         eight = ""
         seven = ""
         six = ""
@@ -47,8 +43,6 @@ struct ClipboardManagerApp: App {
         var six: String
         var seven: String
         var eight: String
-        var nine: String
-        var ten: String
     }
 
     
@@ -60,42 +54,50 @@ struct ClipboardManagerApp: App {
         }
         */
         var _ = print(updateVars())
+        var temp: String = ""
         
         MenuBarExtra(currentNumber, systemImage: "arrow.up.doc.on.clipboard") {
             Group {
                 Button(one1) {
                     writeToClipboard(data: one1)
+                    one1 = ""
                 }
                 .keyboardShortcut("1")
                 Button(two) {
                     writeToClipboard(data: two)
+                    two = ""
                 }
                 .keyboardShortcut("2")
                 Button(three) {
                     writeToClipboard(data: three)
+                    three = ""
                 }
                 .keyboardShortcut("3")
                 Button(four) {
                     writeToClipboard(data: four)
+                    four = ""
                 }
                 .keyboardShortcut("4")
                 Button(five) {
                     writeToClipboard(data: five)
+                    five = ""
                 }
                 .keyboardShortcut("5")
                 Button(six) {
                     writeToClipboard(data: six)
+                    six = ""
                 }
                 .keyboardShortcut("6")
                 Button(seven) {
                     writeToClipboard(data: seven)
+                    seven = ""
                 }
                 .keyboardShortcut("7")
                 Button(eight) {
                     writeToClipboard(data: eight)
+                    eight = ""
                 }
                 .keyboardShortcut("8")
-                
             }
             
             Divider()
@@ -129,9 +131,7 @@ struct ClipboardManagerApp: App {
                     "five": "5",
                     "six": "6",
                     "seven": "7",
-                    "eight": "8",
-                    "nine": "9",
-                    "ten": "10"
+                    "eight": "8"
                 }
             """
         
@@ -141,8 +141,6 @@ struct ClipboardManagerApp: App {
         do {
             let dataDecoded = try decoder.decode(User.self, from: data ?? Data(json.utf8))
             DispatchQueue.main.async {
-                ten = dataDecoded.ten
-                nine = dataDecoded.nine
                 eight = dataDecoded.eight
                 seven = dataDecoded.seven
                 six = dataDecoded.six
@@ -157,26 +155,79 @@ struct ClipboardManagerApp: App {
         }
         
         // Update List
+        updateList(pasteboard: pasteboard)
+        
+    } // End updateVars() func
+    
+    func updateList(pasteboard: NSPasteboard) {
         if let read = pasteboard.pasteboardItems?.first?.string(forType: .string) {
             if read != one1 {
                 DispatchQueue.main.async {
-                    ten = nine
-                    nine = eight
-                    eight = seven
-                    seven = six
-                    six = five
-                    five = four
-                    four = three
-                    three = two
-                    two = one1
+                    var storage1: String = one1
+                    var storage2: String = one1
                     one1 = read
+                    if two == "" {
+                        two = storage1
+                    } else {
+                        storage2 = two
+                        two = storage1
+                        storage1 = storage2
+                        
+                        if three == "" {
+                            three = storage1
+                        } else {
+                            storage2 = three
+                            three = storage1
+                            storage1 = storage2
+                            
+                            if four == "" {
+                                four = storage1
+                            } else {
+                                storage2 = four
+                                four = storage1
+                                storage1 = storage2
+                                
+                                if five == "" {
+                                    five = storage1
+                                } else {
+                                    storage2 = five
+                                    five = storage1
+                                    storage1 = storage2
+                                    
+                                    if six == "" {
+                                        six = storage1
+                                    } else {
+                                        storage2 = six
+                                        six = storage1
+                                        storage1 = storage2
+                                        
+                                        if seven == "" {
+                                            seven = storage1
+                                        } else {
+                                            storage2 = seven
+                                            seven = storage1
+                                            storage1 = storage2
+                                            
+                                            if eight == "" {
+                                                eight = storage1
+                                            } else {
+                                                storage2 = eight
+                                                eight = storage1
+                                                storage1 = storage2
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     // Encode New JSON Values
-                    encodeJSON(userData: User(one1: one1, two: two, three: three, four: four, five: five, six: six, seven: seven, eight: eight, nine: nine, ten: ten))
+                    encodeJSON(userData: User(one1: one1, two: two, three: three, four: four, five: five, six: six, seven: seven, eight: eight))
                 }
             }
         }
-        
-    } // End updateVars() func
+    }
     
     // JSON Utils
     // Takes in User object and makes JSON file
@@ -215,8 +266,6 @@ struct ClipboardManagerApp: App {
     
     // Wipes Clipboard History
     func clearClipboardHistory() {
-        ten = ""
-        nine = ""
         eight = ""
         seven = ""
         six = ""
@@ -226,7 +275,7 @@ struct ClipboardManagerApp: App {
         two = ""
         one1 = ""
         writeToClipboard(data: "")
-        encodeJSON(userData: User(one1: one1, two: two, three: three, four: four, five: five, six: six, seven: seven, eight: eight, nine: nine, ten: ten))
+        encodeJSON(userData: User(one1: one1, two: two, three: three, four: four, five: five, six: six, seven: seven, eight: eight))
     }
     
 }
